@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+
+</head>
+<body>
+<div style="text-align:center;">
+    <form action="/as_admin/" method="post">
+        <button class="button button_blue center">Admin</button>
+    </form>
+    <form action="/as_user/" method="post">
+        <button class="button button_green center">User</button>
+    </form>
+</div>
+</body>
+</html>
