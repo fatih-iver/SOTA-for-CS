@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, g
+from flask import Flask, render_template, redirect, url_for, g, request, abort
 import sqlite3
 
 app = Flask(__name__)
@@ -27,9 +27,27 @@ def welcome():
     return render_template('welcome.html')
 
 
-@app.route('/index')
+@app.route('/index', methods=['GET', 'POST'])
 def index():
-    return render_template("index.html")
+    if request.method == 'POST':
+        pass
+    elif request.method == 'GET':
+        if isAdmin:
+            return render_template("index_admin.html")
+        else:
+            return render_template("index_user.html")
+    else:
+        return abort(404)
+
+
+@app.route('/login', )
+def login():
+    if request.method == 'POST':
+        user = request.form['nm']
+        return redirect(url_for('success', name=user))
+    else:
+        user = request.args.get('nm')
+        return redirect(url_for('success', name=user))
 
 
 def set_admin(true_or_false):
