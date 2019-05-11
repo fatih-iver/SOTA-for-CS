@@ -212,18 +212,17 @@ def add_paper():
 @app.route('/update_paper', methods=['GET', 'POST'])
 def update_paper():
     if request.method == 'POST':
-        old_topic_name = request.form["old_topic_name"]
-        old_sota_result = int(request.form["old_sota_result"])
-        new_topic_name = request.form["new_topic_name"]
-        new_sota_result = int(request.form["new_sota_result"])
+        old_title = request.form["old_title"]
+        new_title = request.form["new_title"]
+        new_abstract = request.form["new_abstract"]
+        new_result = int(request.form["new_result"])
+
         connection = sqlite3.connect('sota.db')
         cursor = connection.cursor()
-        cursor.execute(
-            """UPDATE topics SET topic_name=?, sota_result=? WHERE topic_name=? OR sota_result=?""",
-            (new_topic_name, new_sota_result, old_topic_name, old_sota_result))
+        cursor.execute("""UPDATE papers SET title=?, abstract=?, result=? WHERE title=?""",(new_title, new_abstract, new_result, old_title))
         connection.commit()
         connection.close()
-        print_topics()
+        print_papers()
         return redirect(url_for('index'))
     elif request.method == 'GET':
         return render_template("update_paper.html")

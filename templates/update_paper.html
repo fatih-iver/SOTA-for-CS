@@ -5,7 +5,21 @@
     <title>Update Paper</title>
 </head>
 <body>
-
+<form action="{{ url_for('update_paper') }}" method="post">
+    Old Title:<br>
+    <input type="text" name="old_title">
+    <br>
+    New Title:<br>
+    <input type="text" name="new_title">
+    <br>
+    New Abstract:<br>
+    <input type="text" name="new_abstract">
+    <br>
+    New Result:<br>
+    <input type="text" name="new_result">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
 
 </body>
 </html>
