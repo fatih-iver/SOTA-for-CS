@@ -146,6 +146,7 @@ def delete_topic():
     else:
         return abort(404)
 
+
 def print_papers():
     connection = sqlite3.connect('sota.db')
     cursor = connection.cursor()
@@ -157,14 +158,50 @@ def print_papers():
 @app.route('/add_paper', methods=['GET', 'POST'])
 def add_paper():
     if request.method == 'POST':
-        topic_name = request.form["topic_name"]
-        sota_result = int(request.form["sota_result"])
+        title = request.form["title"]
+        abstract = request.form["abstract"]
+        result = int(request.form["result"])
+        topic_names = request.form.getlist('topic_names')
+        sota_results = request.form.getlist('sota_results')
+        author_names = request.form.getlist('author_names')
+        author_surnames = request.form.getlist('author_surnames')
+
         connection = sqlite3.connect('sota.db')
         cursor = connection.cursor()
-        cursor.execute("""INSERT INTO topics (topic_name, sota_result) VALUES(?, ?)""", (topic_name, sota_result))
+        cursor.execute("""INSERT INTO papers (title, abstract, result) VALUES(?, ?, ?)""", (title, abstract, result))
         connection.commit()
+        paper_id = cursor.execute("""SELECT paper_id FROM papers WHERE title=?""", (title,)).fetchall()[0][0]
+        for topic_name, sota_result in zip(topic_names, sota_results):
+            query_result = cursor.execute("""SELECT topic_id FROM topics WHERE topic_name=? AND sota_result=?""",
+                                          (topic_name, sota_result)).fetchall()
+            if not query_result:
+                cursor.execute("""INSERT INTO topics (topic_name, sota_result) VALUES(?, ?)""",
+                               (topic_name, sota_result))
+                connection.commit()
+            topic_id = cursor.execute("""SELECT topic_id FROM topics WHERE topic_name=? AND sota_result=?""",
+                                      (topic_name, sota_result)).fetchall()[0][0]
+            query_result = cursor.execute("""SELECT * FROM paper_topics WHERE paper_id=? AND topic_id=?""",
+                                          (paper_id, topic_id)).fetchall()
+            if not query_result:
+                cursor.execute("""INSERT INTO paper_topics (paper_id, topic_id) VALUES(?, ?)""", (paper_id, topic_id))
+                connection.commit()
+        for author_name, author_surname in zip(author_names, author_surnames):
+            query_result = cursor.execute("""SELECT author_id FROM authors WHERE author_name=? AND author_surname=?""",
+                                          (author_name, author_surname)).fetchall()
+            if not query_result:
+                cursor.execute("""INSERT INTO authors (author_name, author_surname) VALUES(?, ?)""",
+                               (author_name, author_surname))
+                connection.commit()
+            author_id = cursor.execute("""SELECT author_id FROM authors WHERE author_name=? AND author_surname=?""",
+                                       (author_name, author_surname)).fetchall()[0][0]
+            query_result = cursor.execute("""SELECT * FROM paper_authors WHERE paper_id=? AND author_id=?""",
+                                          (paper_id, author_id)).fetchall()
+            if not query_result:
+                cursor.execute("""INSERT INTO paper_authors (paper_id, author_id) VALUES(?, ?)""",
+                               (paper_id, author_id))
+                connection.commit()
         connection.close()
-        print_topics()
+        print_papers()
         return redirect(url_for('index'))
     elif request.method == 'GET':
         return render_template("add_paper.html")
@@ -200,7 +237,7 @@ def delete_paper():
         title = request.form["title"]
         connection = sqlite3.connect('sota.db')
         cursor = connection.cursor()
-        cursor.execute("""DELETE FROM papers WHERE title=?""", (title))
+        cursor.execute("""DELETE FROM papers WHERE title=?""", (title,))
         connection.commit()
         connection.close()
         print_papers()
@@ -209,6 +246,7 @@ def delete_paper():
         return render_template("delete_paper.html")
     else:
         return abort(404)
+
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():

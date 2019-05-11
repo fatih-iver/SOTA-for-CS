@@ -12,16 +12,20 @@
     Title:<br>
     <input type="text" name="title">
     <br>
+    Abstract:<br>
+    <input type="text" name="abstract">
+    <br>
     Result:<br>
     <input type="text" name="result">
     <br><br>
     <div class="topic_container">
-    Topics: <br>
-    <input type="text" name="topics"/>
+        <label>Topic Name & SOTA Result:</label>
+    <div><input type="text" name="topic_names" placeholder="topic name"/> <input type="text" name="sota_results" placeholder="sota result"/></div>
     </div>
+    <br>
     <div class="author_container">
-    Authors: <br>
-    <input type="text" name="topics"/>
+    <label>Author Name & Surname:</label>
+    <div><input type="text" name="author_names" placeholder="author name"/> <input type="text" name="author_surnames" placeholder="author surname"/></div>
     </div>
     <input type="submit" value="Submit">
 </form>
@@ -36,13 +40,13 @@ $(document).ready(function() {
 
     $(topic_add_button).click(function(e) {
         e.preventDefault();
-        $(topic_container).append('<div><input type="text" name="topics"/><a href="#" class="delete">Delete</a></div>');
+        $(topic_container).append('<div><input type="text" name="topic_names" placeholder="topic name"/> <input type="text" name="sota_results" placeholder="sota result"/>\n<a href="#" class="delete">Delete</a></div>');
 
     });
 
     $(author_add_button).click(function(e) {
         e.preventDefault();
-        $(author_container).append('<div><input type="text" name="authors"/><a href="#" class="delete">Delete</a></div>');
+        $(author_container).append('<div><input type="text" name="author_names" placeholder="author name"/> <input type="text" name="author_surnames" placeholder="author surname"/>\n<a href="#" class="delete">Delete</a></div>');
 
     });
 
