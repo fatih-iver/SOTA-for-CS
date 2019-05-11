@@ -5,7 +5,7 @@ print("The database is opened successfully");
 
 conn.execute("""
             CREATE TABLE IF NOT EXISTS authors (
-            author_id INTEGER PRIMARY KEY, 
+            author_id INTEGER PRIMARY KEY AUTOINCREMENT, 
             author_name TEXT NOT NULL,
             author_surname TEXT NOT NULL,
             UNIQUE(author_name, author_surname) );
@@ -13,14 +13,14 @@ conn.execute("""
 
 conn.execute("""
             CREATE TABLE IF NOT EXISTS topics (
-            topic_id INTEGER PRIMARY KEY,
+            topic_id INTEGER PRIMARY KEY AUTOINCREMENT,
             topic_name TEXT UNIQUE,
             sota_result INTEGER UNIQUE );
             """)
 
 conn.execute("""
             CREATE TABLE IF NOT EXISTS papers (
-            paper_id INTEGER PRIMARY KEY,
+            paper_id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT UNIQUE,
             abstract TEXT,
             result INTEGER );

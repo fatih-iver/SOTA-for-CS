@@ -16,23 +16,33 @@ option_update = "update"
 option_delete = "delete"
 
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-    return db
-
-
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
-
-
 @app.route('/')
 def welcome():
     return render_template('welcome.html')
+
+
+@app.route('/add_author', methods=['GET', 'POST'])
+def add_author():
+    if request.method == 'POST':
+        name = request.form["author_name"]
+        surname = request.form["author_surname"]
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute("""INSERT INTO authors (author_name, author_surname) VALUES(?, ?)""", (name, surname))
+        connection.commit()
+        connection.close()
+
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        connection = sqlite3.connect('sota.db')
+        for row in cursor.execute("""SELECT * FROM authors"""):
+            print(row)
+        connection.close()
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template("add_author.html")
+    else:
+        return abort(404)
 
 
 @app.route('/index', methods=['GET', 'POST'])
@@ -51,7 +61,7 @@ def index():
         elif type_author in request.form:
             selected_option = request.form[type_author]
             if selected_option == option_add:
-                return selected_option + type_author
+                return redirect(url_for('add_author'))
             elif selected_option == option_update:
                 return selected_option + type_author
             elif selected_option == option_delete:
