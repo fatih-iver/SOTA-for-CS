@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Topic</title>
+</head>
+<body>
+<form action="{{ url_for('add_topic') }}" method="post">
+    Topic Name:<br>
+    <input type="text" name="topic_name">
+    <br>
+    SOTA Result:<br>
+    <input type="text" name="sota_result">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

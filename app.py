@@ -77,7 +77,7 @@ def delete_author():
         connection = sqlite3.connect('sota.db')
         cursor = connection.cursor()
         cursor.execute(
-            """DELETE FROM authors WHERE author_name=? and author_surname=?""", (author_name, author_surname))
+            """DELETE FROM authors WHERE author_name=? AND author_surname=?""", (author_name, author_surname))
         connection.commit()
         connection.close()
         print_authors()
@@ -88,21 +88,78 @@ def delete_author():
         return abort(404)
 
 
+def print_topics():
+    connection = sqlite3.connect('sota.db')
+    cursor = connection.cursor()
+    for author in cursor.execute("""SELECT * FROM topics"""):
+        print(author)
+    connection.close()
+
+
+@app.route('/add_topic', methods=['GET', 'POST'])
+def add_topic():
+    if request.method == 'POST':
+        topic_name = request.form["topic_name"]
+        sota_result = int(request.form["sota_result"])
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute("""INSERT INTO topics (topic_name, sota_result) VALUES(?, ?)""", (topic_name, sota_result))
+        connection.commit()
+        connection.close()
+        print_topics()
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template("add_topic.html")
+    else:
+        return abort(404)
+
+
+@app.route('/update_topic', methods=['GET', 'POST'])
+def update_topic():
+    if request.method == 'POST':
+        old_topic_name = request.form["old_topic_name"]
+        old_sota_result = int(request.form["old_sota_result"])
+        new_topic_name = request.form["new_topic_name"]
+        new_sota_result = int(request.form["new_sota_result"])
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute(
+            """UPDATE topics SET topic_name=?, sota_result=? WHERE topic_name=? OR sota_result=?""",
+            (new_topic_name, new_sota_result, old_topic_name, old_sota_result))
+        connection.commit()
+        connection.close()
+        print_topics()
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template("update_topic.html")
+    else:
+        return abort(404)
+
+
+@app.route('/delete_topic', methods=['GET', 'POST'])
+def delete_topic():
+    if request.method == 'POST':
+        topic_name = request.form["topic_name"]
+        sota_result = int(request.form["sota_result"])
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute(
+            """DELETE FROM topics WHERE topic_name=? OR sota_result=?""", (topic_name, sota_result))
+        connection.commit()
+        connection.close()
+        print_topics()
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template("delete_topic.html")
+    else:
+        return abort(404)
+
+
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        if type_paper in request.form:
-            selected_option = request.form[type_paper]
-            if selected_option == option_add:
-                return selected_option + type_paper
-            elif selected_option == option_update:
-                return selected_option + type_paper
-            elif selected_option == option_delete:
-                return selected_option + type_paper
-            else:
-                return abort(404)
-        elif type_author in request.form:
-            selected_option = request.form[type_author]
+        if "author" in request.form:
+            selected_option = request.form["author"]
             if selected_option == option_add:
                 return redirect(url_for('add_author'))
             elif selected_option == option_update:
@@ -111,8 +168,18 @@ def index():
                 return redirect(url_for('delete_author'))
             else:
                 return abort(404)
-        elif type_topic in request.form:
-            selected_option = request.form[type_topic]
+        elif "topic" in request.form:
+            selected_option = request.form["topic"]
+            if selected_option == option_add:
+                return redirect(url_for('add_topic'))
+            elif selected_option == option_update:
+                return redirect(url_for('update_topic'))
+            elif selected_option == option_delete:
+                return redirect(url_for('delete_topic'))
+            else:
+                return abort(404)
+        elif "paper" in request.form:
+            selected_option = request.form["paper"]
             if selected_option == option_add:
                 return selected_option + type_topic
             elif selected_option == option_update:
@@ -130,16 +197,6 @@ def index():
             return render_template("index_user.html")
     else:
         return abort(404)
-
-
-@app.route('/login', )
-def login():
-    if request.method == 'POST':
-        user = request.form['nm']
-        return redirect(url_for('success', name=user))
-    else:
-        user = request.args.get('nm')
-        return redirect(url_for('success', name=user))
 
 
 def set_admin(true_or_false):

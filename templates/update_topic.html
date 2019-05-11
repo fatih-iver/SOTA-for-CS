@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Topic</title>
+</head>
+<body>
+<form action="{{ url_for('update_topic') }}" method="post">
+    Old Topic Name:<br>
+    <input type="text" name="old_topic_name">
+    <br>
+    Old Sota Result:<br>
+    <input type="text" name="old_sota_result">
+    <br>
+    New Topic Name:<br>
+    <input type="text" name="new_topic_name">
+    <br>
+    New Sota Result:<br>
+    <input type="text" name="new_sota_result">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>
