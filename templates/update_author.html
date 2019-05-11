@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Author</title>
+</head>
+<body>
+<form action="{{ url_for('update_author') }}" method="post">
+    Old Author Name:<br>
+    <input type="text" name="old_author_name">
+    <br>
+    Old Author Surname:<br>
+    <input type="text" name="old_author_surname">
+    <br>
+    New Author Name:<br>
+    <input type="text" name="new_author_name">
+    <br>
+    New Author Surname:<br>
+    <input type="text" name="new_author_surname">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

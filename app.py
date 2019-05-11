@@ -21,6 +21,14 @@ def welcome():
     return render_template('welcome.html')
 
 
+def print_authors():
+    connection = sqlite3.connect('sota.db')
+    cursor = connection.cursor()
+    for author in cursor.execute("""SELECT * FROM authors"""):
+        print(author)
+    connection.close()
+
+
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():
     if request.method == 'POST':
@@ -31,16 +39,51 @@ def add_author():
         cursor.execute("""INSERT INTO authors (author_name, author_surname) VALUES(?, ?)""", (name, surname))
         connection.commit()
         connection.close()
-
-        connection = sqlite3.connect('sota.db')
-        cursor = connection.cursor()
-        connection = sqlite3.connect('sota.db')
-        for row in cursor.execute("""SELECT * FROM authors"""):
-            print(row)
-        connection.close()
+        print_authors()
         return redirect(url_for('index'))
     elif request.method == 'GET':
         return render_template("add_author.html")
+    else:
+        return abort(404)
+
+
+@app.route('/update_author', methods=['GET', 'POST'])
+def update_author():
+    if request.method == 'POST':
+        old_author_name = request.form["old_author_name"]
+        old_author_surname = request.form["old_author_surname"]
+        new_author_name = request.form["new_author_name"]
+        new_author_surname = request.form["new_author_surname"]
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute(
+            """UPDATE authors SET author_name=?, author_surname=? WHERE author_name=? and author_surname=?""",
+            (new_author_name, new_author_surname, old_author_name, old_author_surname))
+        connection.commit()
+        connection.close()
+        print_authors()
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template("update_author.html")
+    else:
+        return abort(404)
+
+
+@app.route('/delete_author', methods=['GET', 'POST'])
+def delete_author():
+    if request.method == 'POST':
+        author_name = request.form["author_name"]
+        author_surname = request.form["author_surname"]
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute(
+            """DELETE FROM authors WHERE author_name=? and author_surname=?""", (author_name, author_surname))
+        connection.commit()
+        connection.close()
+        print_authors()
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template("delete_author.html")
     else:
         return abort(404)
 
@@ -63,9 +106,9 @@ def index():
             if selected_option == option_add:
                 return redirect(url_for('add_author'))
             elif selected_option == option_update:
-                return selected_option + type_author
+                return redirect(url_for('update_author'))
             elif selected_option == option_delete:
-                return selected_option + type_author
+                return redirect(url_for('delete_author'))
             else:
                 return abort(404)
         elif type_topic in request.form:
