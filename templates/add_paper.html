@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Paper</title>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<button class="add_new_author">Add New Author</button>
+<button class="add_new_topic">Add New Topic</button>
+<form action="{{ url_for('add_paper') }}" method="post">
+    Title:<br>
+    <input type="text" name="title">
+    <br>
+    Result:<br>
+    <input type="text" name="result">
+    <br><br>
+    <div class="topic_container">
+    Topics: <br>
+    <input type="text" name="topics"/>
+    </div>
+    <div class="author_container">
+    Authors: <br>
+    <input type="text" name="topics"/>
+    </div>
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+$(document).ready(function() {
+    var topic_container = $(".topic_container");
+    var topic_add_button = $(".add_new_topic");
+
+    var author_container = $(".author_container");
+    var author_add_button = $(".add_new_author");
+
+    $(topic_add_button).click(function(e) {
+        e.preventDefault();
+        $(topic_container).append('<div><input type="text" name="topics"/><a href="#" class="delete">Delete</a></div>');
+
+    });
+
+    $(author_add_button).click(function(e) {
+        e.preventDefault();
+        $(author_container).append('<div><input type="text" name="authors"/><a href="#" class="delete">Delete</a></div>');
+
+    });
+
+    $(topic_container).on("click", ".delete", function(e) {
+        e.preventDefault();
+        $(this).parent('div').remove();
+    })
+
+    $(author_container).on("click", ".delete", function(e) {
+        e.preventDefault();
+        $(this).parent('div').remove();
+    })
+});
+</script>
+</body>
+</html>

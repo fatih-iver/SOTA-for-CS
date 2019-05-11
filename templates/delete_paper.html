@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Paper</title>
+</head>
+<body>
+<form action="{{ url_for('delete_paper') }}" method="post">
+    Title:<br>
+    <input type="text" name="title">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>

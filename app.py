@@ -7,14 +7,6 @@ isAdmin = False
 
 DATABASE = 'sota.db'
 
-type_paper = "paper"
-type_author = "author"
-type_topic = "topic"
-
-option_add = "add"
-option_update = "update"
-option_delete = "delete"
-
 
 @app.route('/')
 def welcome():
@@ -91,8 +83,8 @@ def delete_author():
 def print_topics():
     connection = sqlite3.connect('sota.db')
     cursor = connection.cursor()
-    for author in cursor.execute("""SELECT * FROM topics"""):
-        print(author)
+    for topic in cursor.execute("""SELECT * FROM topics"""):
+        print(topic)
     connection.close()
 
 
@@ -154,38 +146,101 @@ def delete_topic():
     else:
         return abort(404)
 
+def print_papers():
+    connection = sqlite3.connect('sota.db')
+    cursor = connection.cursor()
+    for paper in cursor.execute("""SELECT * FROM papers"""):
+        print(paper)
+    connection.close()
+
+
+@app.route('/add_paper', methods=['GET', 'POST'])
+def add_paper():
+    if request.method == 'POST':
+        topic_name = request.form["topic_name"]
+        sota_result = int(request.form["sota_result"])
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute("""INSERT INTO topics (topic_name, sota_result) VALUES(?, ?)""", (topic_name, sota_result))
+        connection.commit()
+        connection.close()
+        print_topics()
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template("add_paper.html")
+    else:
+        return abort(404)
+
+
+@app.route('/update_paper', methods=['GET', 'POST'])
+def update_paper():
+    if request.method == 'POST':
+        old_topic_name = request.form["old_topic_name"]
+        old_sota_result = int(request.form["old_sota_result"])
+        new_topic_name = request.form["new_topic_name"]
+        new_sota_result = int(request.form["new_sota_result"])
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute(
+            """UPDATE topics SET topic_name=?, sota_result=? WHERE topic_name=? OR sota_result=?""",
+            (new_topic_name, new_sota_result, old_topic_name, old_sota_result))
+        connection.commit()
+        connection.close()
+        print_topics()
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template("update_paper.html")
+    else:
+        return abort(404)
+
+
+@app.route('/delete_paper', methods=['GET', 'POST'])
+def delete_paper():
+    if request.method == 'POST':
+        title = request.form["title"]
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute("""DELETE FROM papers WHERE title=?""", (title))
+        connection.commit()
+        connection.close()
+        print_papers()
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        return render_template("delete_paper.html")
+    else:
+        return abort(404)
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         if "author" in request.form:
             selected_option = request.form["author"]
-            if selected_option == option_add:
+            if selected_option == "add":
                 return redirect(url_for('add_author'))
-            elif selected_option == option_update:
+            elif selected_option == "update":
                 return redirect(url_for('update_author'))
-            elif selected_option == option_delete:
+            elif selected_option == "delete":
                 return redirect(url_for('delete_author'))
             else:
                 return abort(404)
         elif "topic" in request.form:
             selected_option = request.form["topic"]
-            if selected_option == option_add:
+            if selected_option == "add":
                 return redirect(url_for('add_topic'))
-            elif selected_option == option_update:
+            elif selected_option == "update":
                 return redirect(url_for('update_topic'))
-            elif selected_option == option_delete:
+            elif selected_option == "delete":
                 return redirect(url_for('delete_topic'))
             else:
                 return abort(404)
         elif "paper" in request.form:
             selected_option = request.form["paper"]
-            if selected_option == option_add:
-                return selected_option + type_topic
-            elif selected_option == option_update:
-                return selected_option + type_topic
-            elif selected_option == option_delete:
-                return selected_option + type_topic
+            if selected_option == "add":
+                return redirect(url_for('add_paper'))
+            elif selected_option == "update":
+                return redirect(url_for('update_paper'))
+            elif selected_option == "delete":
+                return redirect(url_for('delete_paper'))
             else:
                 return abort(404)
         else:
