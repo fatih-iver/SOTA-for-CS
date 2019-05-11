@@ -7,6 +7,14 @@ isAdmin = False
 
 DATABASE = 'sota.db'
 
+type_paper = "paper"
+type_author = "author"
+type_topic = "topic"
+
+option_add = "add"
+option_update = "update"
+option_delete = "delete"
+
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -30,7 +38,38 @@ def welcome():
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        pass
+        if type_paper in request.form:
+            selected_option = request.form[type_paper]
+            if selected_option == option_add:
+                return selected_option + type_paper
+            elif selected_option == option_update:
+                return selected_option + type_paper
+            elif selected_option == option_delete:
+                return selected_option + type_paper
+            else:
+                return abort(404)
+        elif type_author in request.form:
+            selected_option = request.form[type_author]
+            if selected_option == option_add:
+                return selected_option + type_author
+            elif selected_option == option_update:
+                return selected_option + type_author
+            elif selected_option == option_delete:
+                return selected_option + type_author
+            else:
+                return abort(404)
+        elif type_topic in request.form:
+            selected_option = request.form[type_topic]
+            if selected_option == option_add:
+                return selected_option + type_topic
+            elif selected_option == option_update:
+                return selected_option + type_topic
+            elif selected_option == option_delete:
+                return selected_option + type_topic
+            else:
+                return abort(404)
+        else:
+            return abort(404)
     elif request.method == 'GET':
         if isAdmin:
             return render_template("index_admin.html")
