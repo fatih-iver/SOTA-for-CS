@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View All</title>
+</head>
+<body>
+
+<form action="{{ url_for('index') }}" method="get">
+    Go Back to Index Page:
+    <input type="submit" value="Submit">
+</form>
+<br>
+<form action="{{ url_for('view_all') }}" method="post">
+    View all <br>
+    <input type="radio" name="view_all_for" value="authors" checked> authors <br>
+    <input type="radio" name="view_all_for" value="topics" > topics <br>
+    <input type="radio" name="view_all_for" value="papers" > papers <br>
+    <input type="submit" value="Submit">
+</form>
+
+<ul>
+{% for row in rows %}
+<li>{{ row }}</li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

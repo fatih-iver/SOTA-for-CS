@@ -246,42 +246,60 @@ def delete_paper():
     else:
         return abort(404)
 
+@app.route('/view_all', methods=['GET', 'POST'])
+def view_all():
+    if request.method == 'POST':
+        view_all_for = request.form["view_all_for"]
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        rows = cursor.execute(f"SELECT * FROM {view_all_for}").fetchall()
+        connection.close()
+        return render_template("view_all.html", rows=rows)
+    elif request.method == 'GET':
+        return render_template("view_all.html", rows=[])
+    else:
+        return abort(404)
+
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        if "author" in request.form:
-            selected_option = request.form["author"]
-            if selected_option == "add":
-                return redirect(url_for('add_author'))
-            elif selected_option == "update":
-                return redirect(url_for('update_author'))
-            elif selected_option == "delete":
-                return redirect(url_for('delete_author'))
-            else:
-                return abort(404)
-        elif "topic" in request.form:
-            selected_option = request.form["topic"]
-            if selected_option == "add":
-                return redirect(url_for('add_topic'))
-            elif selected_option == "update":
-                return redirect(url_for('update_topic'))
-            elif selected_option == "delete":
-                return redirect(url_for('delete_topic'))
-            else:
-                return abort(404)
-        elif "paper" in request.form:
-            selected_option = request.form["paper"]
-            if selected_option == "add":
-                return redirect(url_for('add_paper'))
-            elif selected_option == "update":
-                return redirect(url_for('update_paper'))
-            elif selected_option == "delete":
-                return redirect(url_for('delete_paper'))
-            else:
-                return abort(404)
+        if isAdmin:
+            if "author" in request.form:
+                selected_option = request.form["author"]
+                if selected_option == "add":
+                    return redirect(url_for('add_author'))
+                elif selected_option == "update":
+                    return redirect(url_for('update_author'))
+                elif selected_option == "delete":
+                    return redirect(url_for('delete_author'))
+                else:
+                    return abort(404)
+            elif "topic" in request.form:
+                selected_option = request.form["topic"]
+                if selected_option == "add":
+                    return redirect(url_for('add_topic'))
+                elif selected_option == "update":
+                    return redirect(url_for('update_topic'))
+                elif selected_option == "delete":
+                    return redirect(url_for('delete_topic'))
+                else:
+                    return abort(404)
+            elif "paper" in request.form:
+                selected_option = request.form["paper"]
+                if selected_option == "add":
+                    return redirect(url_for('add_paper'))
+                elif selected_option == "update":
+                    return redirect(url_for('update_paper'))
+                elif selected_option == "delete":
+                    return redirect(url_for('delete_paper'))
+                else:
+                    return abort(404)
         else:
-            return abort(404)
+            option = request.form["option"]
+            if option == "view_all":
+                return redirect(url_for('view_all'))
+
     elif request.method == 'GET':
         if isAdmin:
             return render_template("index_admin.html")

@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Flask App</title>
+    <title>Index User</title>
 </head>
 <body>
-USER INDEX PAGE
+<form action="{{ url_for('index') }}" method="post">
+    Options: <br>
+    <input type="radio" name="option" value="view_all" checked> View all authors, topics or papers <br>
+    <input type="submit" value="Submit">
+</form>
+<br>
 </body>
 </html>
