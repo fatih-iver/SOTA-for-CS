@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Papers By Author</title>
+</head>
+<body>
+<form action="{{ url_for('index') }}" method="get">
+    Go Back to Index Page:
+    <input type="submit" value="Submit">
+</form>
+<br>
+<form action="{{ url_for('papers_by_author') }}" method="post">
+    Author Name:<br>
+    <input type="text" name="author_name">
+    <br>
+    Author Surname:<br>
+    <input type="text" name="author_surname">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+<ul>
+{% for paper in papers %}
+<li>{{ paper }}</li>
+{% endfor %}
+</ul>
+</body>
+</html>

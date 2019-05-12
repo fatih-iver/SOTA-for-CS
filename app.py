@@ -260,6 +260,28 @@ def view_all():
     else:
         return abort(404)
 
+@app.route('/papers_by_author', methods=['GET', 'POST'])
+def papers_by_author():
+    if request.method == 'POST':
+        author_name = request.form["author_name"]
+        author_surname = request.form["author_surname"]
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        result = cursor.execute("SELECT author_id FROM authors WHERE author_name=? and author_surname=?", (author_name, author_surname)).fetchall()
+        papers = []
+        if result:
+            author_id = result[0][0]
+            result = cursor.execute(f"SELECT paper_id FROM paper_authors WHERE author_id={author_id}").fetchall()
+            if result:
+                paper_ids = [element[0] for element in result]
+                for paper_id in paper_ids:
+                    papers.extend(cursor.execute(f"SELECT * FROM papers WHERE paper_id={paper_id}").fetchall())
+        connection.close()
+        return render_template("papers_by_author.html", papers=papers)
+    elif request.method == 'GET':
+        return render_template("papers_by_author.html", papers=[])
+    else:
+        return abort(404)
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
@@ -299,6 +321,9 @@ def index():
             option = request.form["option"]
             if option == "view_all":
                 return redirect(url_for('view_all'))
+            elif option == "papers_by_author":
+                return redirect(url_for('papers_by_author'))
+
 
     elif request.method == 'GET':
         if isAdmin:
