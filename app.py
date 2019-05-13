@@ -330,6 +330,25 @@ def papers_by_topic():
     else:
         return abort(404)
 
+@app.route('/sota_by_topic', methods=['GET', 'POST'])
+def sota_by_topic():
+    if request.method == 'POST':
+        topic_name = request.form['topic_name'].strip()
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        papers = []
+        query_result = cursor.execute("""SELECT topic_id, sota_result FROM topics WHERE topic_name=?""", (topic_name,)).fetchone()
+        if query_result:
+            topic_id = query_result[0]
+            sota_result = query_result[1]
+            papers = cursor.execute("""SELECT papers.title, papers.abstract, papers.result FROM papers INNER JOIN paper_topics ON papers.paper_id=paper_topics.paper_id WHERE topic_id=? and result=?""", (topic_id, sota_result)).fetchall()
+        connection.close()
+        return render_template("sota_by_topic.html", papers=papers)
+    elif request.method == 'GET':
+        return render_template("sota_by_topic.html", papers = [])
+    else:
+        return abort(404)
+
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -376,7 +395,10 @@ def index():
                 return redirect(url_for('search'))
             elif option == "papers_by_topic":
                 return redirect(url_for('papers_by_topic'))
-
+            elif option == "sota_by_topic":
+                return redirect(url_for('sota_by_topic'))
+            else:
+                return abort(404)
     elif request.method == 'GET':
         if isAdmin:
             return render_template("index_admin.html")
