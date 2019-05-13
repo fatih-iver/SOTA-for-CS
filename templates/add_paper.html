@@ -19,8 +19,8 @@
     <input type="text" name="result">
     <br><br>
     <div class="topic_container">
-        <label>Topic Name & SOTA Result:</label>
-    <div><input type="text" name="topic_names" placeholder="topic name"/> <input type="text" name="sota_results" placeholder="sota result"/></div>
+        <label>Topic Name:</label>
+    <div><input type="text" name="topic_names" placeholder="topic name"/></div>
     </div>
     <br>
     <div class="author_container">
@@ -40,7 +40,7 @@ $(document).ready(function() {
 
     $(topic_add_button).click(function(e) {
         e.preventDefault();
-        $(topic_container).append('<div><input type="text" name="topic_names" placeholder="topic name"/> <input type="text" name="sota_results" placeholder="sota result"/>\n<a href="#" class="delete">Delete</a></div>');
+        $(topic_container).append('<div><input type="text" name="topic_names" placeholder="topic name"/>\n<a href="#" class="delete">Delete</a></div>');
 
     });
 

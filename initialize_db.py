@@ -15,7 +15,7 @@ conn.execute("""
             CREATE TABLE IF NOT EXISTS topics (
             topic_id INTEGER PRIMARY KEY AUTOINCREMENT,
             topic_name TEXT UNIQUE,
-            sota_result INTEGER UNIQUE );
+            sota_result INTEGER);
             """)
 
 conn.execute("""
