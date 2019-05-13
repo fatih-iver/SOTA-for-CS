@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> View Coauthors </title>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+
+<form action="{{ url_for('index') }}" method="get">
+    Go Back to Index Page:
+    <input type="submit" value="Submit">
+</form>
+
+<br>
+
+<form action="{{ url_for('view_coauthors') }}" method="post">
+    Author Name:<br>
+    <input type="text" name="author_name">
+    <br>
+    Author Surname: <br>
+    <input type="text" name="author_surname">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+<br>
+
+<table>
+  <tr>
+    <th>Coauthor Name</th>
+    <th>Coauthor Surname</th>
+  </tr>
+    {% for coauthor in coauthors %}
+        <tr>
+            <td> {{ coauthor[0] }} </td>
+            <td> {{ coauthor[1] }} </td>
+        </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

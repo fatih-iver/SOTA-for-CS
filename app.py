@@ -349,6 +349,30 @@ def sota_by_topic():
     else:
         return abort(404)
 
+@app.route('/view_coauthors', methods=['GET', 'POST'])
+def view_coauthors():
+    if request.method == 'POST':
+        author_name = request.form['author_name'].strip()
+        author_surname = request.form['author_surname'].strip()
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        coauthors = []
+        query_result = cursor.execute("""SELECT author_id FROM authors WHERE author_name=? AND author_surname=?""", (author_name, author_surname)).fetchone()
+        if query_result:
+            author_id = query_result[0]
+            query_result = cursor.execute("""SELECT paper_id FROM paper_authors WHERE author_id=?""", (author_id,)).fetchall()
+            if query_result:
+                for query_tuple in query_result:
+                    paper_id = query_tuple[0]
+                    coauthors.extend(cursor.execute("""SELECT DISTINCT author_name, author_surname FROM authors INNER JOIN paper_authors ON authors.author_id=paper_authors.author_id WHERE paper_id=? and authors.author_id!=?""",
+                                                  (paper_id, author_id)).fetchall())
+        connection.close()
+        return render_template("view_coauthors.html", coauthors=set(coauthors))
+    elif request.method == 'GET':
+        return render_template("view_coauthors.html", coauthors = [])
+    else:
+        return abort(404)
+
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -397,6 +421,8 @@ def index():
                 return redirect(url_for('papers_by_topic'))
             elif option == "sota_by_topic":
                 return redirect(url_for('sota_by_topic'))
+            elif option == "view_coauthors":
+                return redirect(url_for('view_coauthors'))
             else:
                 return abort(404)
     elif request.method == 'GET':
