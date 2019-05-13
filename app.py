@@ -287,15 +287,28 @@ def papers_by_author():
 @app.route('/rank_all_authors', methods=['GET'])
 def rank_all_authors():
     if request.method == 'GET':
-        author_name = request.form["author_name"]
-        author_surname = request.form["author_surname"]
         connection = sqlite3.connect('sota.db')
         cursor = connection.cursor()
-        authors_with_rank = cursor.execute("SELECT author_name, author_surname, COUNT(*) FROM authors INNER JOIN paper_authors ON authors.author_id = paper_authors.author_id GROUP BY author_name, author_surname", (author_name, author_surname)).fetchall()
+        authors_with_rank = cursor.execute("""SELECT author_name, author_surname, COUNT(*) FROM authors INNER JOIN paper_authors ON authors.author_id = paper_authors.author_id GROUP BY author_name, author_surname""").fetchall()
         for author_with_rank in authors_with_rank:
             print(author_with_rank)
         connection.close()
-        return render_template("papers_by_author.html", authors_with_rank=authors_with_rank)
+        return render_template("rank_all_authors.html", authors_with_rank=authors_with_rank)
+    else:
+        return abort(404)
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        keyword = request.form['keyword'].strip()
+        pattern = '%' + keyword + '%'
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        papers = cursor.execute("""SELECT * FROM papers WHERE title LIKE ? OR abstract LIKE ?""", (pattern, pattern)).fetchall()
+        connection.close()
+        return render_template("search.html", papers=papers)
+    elif request.method == 'GET':
+        return render_template("search.html", papers = [])
     else:
         return abort(404)
 
@@ -341,6 +354,8 @@ def index():
                 return redirect(url_for('papers_by_author'))
             elif option == "rank_all_authors":
                 return redirect(url_for('rank_all_authors'))
+            elif option == "search":
+                return redirect(url_for('search'))
 
     elif request.method == 'GET':
         if isAdmin:

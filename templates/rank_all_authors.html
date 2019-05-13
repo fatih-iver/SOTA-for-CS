@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rank All Authors</title>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+
+<form action="{{ url_for('index') }}" method="get">
+    Go Back to Index Page:
+    <input type="submit" value="Submit">
+</form>
+
+<br>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Surname</th>
+    <th>Rank</th>
+  </tr>
+    {% for author_with_rank in authors_with_rank %}
+        <tr>
+            <td> {{ author_with_rank[0] }} </td>
+            <td> {{ author_with_rank[1] }} </td>
+            <td> {{ author_with_rank[2] }} </td>
+        </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
