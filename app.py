@@ -312,6 +312,24 @@ def search():
     else:
         return abort(404)
 
+@app.route('/papers_by_topic', methods=['GET', 'POST'])
+def papers_by_topic():
+    if request.method == 'POST':
+        topic_name = request.form['topic_name'].strip()
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        papers = []
+        query_result = cursor.execute("""SELECT topic_id FROM topics WHERE topic_name=?""", (topic_name,)).fetchone()
+        if query_result:
+            topic_id = query_result[0]
+            papers = cursor.execute("""SELECT papers.title, papers.abstract, papers.result FROM papers INNER JOIN paper_topics ON papers.paper_id=paper_topics.paper_id WHERE topic_id=?""", (topic_id,)).fetchall()
+        connection.close()
+        return render_template("papers_by_topic.html", papers=papers)
+    elif request.method == 'GET':
+        return render_template("papers_by_topic.html", papers = [])
+    else:
+        return abort(404)
+
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -356,6 +374,8 @@ def index():
                 return redirect(url_for('rank_all_authors'))
             elif option == "search":
                 return redirect(url_for('search'))
+            elif option == "papers_by_topic":
+                return redirect(url_for('papers_by_topic'))
 
     elif request.method == 'GET':
         if isAdmin:
