@@ -3,6 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Papers By Author</title>
+        <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
 </head>
 <body>
 <form action="{{ url_for('index') }}" method="get">
@@ -20,10 +37,19 @@
     <input type="submit" value="Submit">
 </form>
 
-<ul>
-{% for paper in papers %}
-<li>{{ paper }}</li>
-{% endfor %}
-</ul>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Abstract</th>
+            <th>Result</th>
+        </tr>
+        {% for paper in papers %}
+            <tr>
+                <td> {{ paper[1] }} </td>
+                <td> {{ paper[2] }} </td>
+                <td> {{ paper[3] }} </td>
+            </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
