@@ -255,9 +255,9 @@ def view_all():
         cursor = connection.cursor()
         rows = cursor.execute(f"SELECT * FROM {view_all_for}").fetchall()
         connection.close()
-        return render_template("view_all.html", rows=rows)
+        return render_template("view_all.html", rows=rows, option=view_all_for)
     elif request.method == 'GET':
-        return render_template("view_all.html", rows=[])
+        return render_template("view_all.html", rows=[], option="none")
     else:
         return abort(404)
 

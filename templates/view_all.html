@@ -3,6 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>View All</title>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
 </head>
 <body>
 
@@ -14,16 +31,68 @@
 <form action="{{ url_for('view_all') }}" method="post">
     View all <br>
     <input type="radio" name="view_all_for" value="authors" checked> authors <br>
-    <input type="radio" name="view_all_for" value="topics" > topics <br>
-    <input type="radio" name="view_all_for" value="papers" > papers <br>
+    <input type="radio" name="view_all_for" value="topics"> topics <br>
+    <input type="radio" name="view_all_for" value="papers"> papers <br>
+    <br>
     <input type="submit" value="Submit">
 </form>
 
-<ul>
-{% for row in rows %}
-<li>{{ row }}</li>
-{% endfor %}
-</ul>
+<br>
+
+{% if option == "authors" %}
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+        </tr>
+        {% for row in rows %}
+            <tr>
+                <td> {{ row[1] }} </td>
+                <td> {{ row[2] }} </td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+{% endif %}
+
+
+{% if option == "topics" %}
+
+    <table>
+        <tr>
+            <th>Topic Name</th>
+            <th>SOTA Result</th>
+        </tr>
+        {% for row in rows %}
+            <tr>
+                <td> {{ row[1] }} </td>
+                <td> {{ row[2] }} </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endif %}
+
+{% if option == "papers" %}
+
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Abstract</th>
+            <th>Result</th>
+        </tr>
+        {% for row in rows %}
+            <tr>
+                <td> {{ row[1] }} </td>
+                <td> {{ row[2] }} </td>
+                <td> {{ row[3] }} </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endif %}
 
 </body>
 </html>
