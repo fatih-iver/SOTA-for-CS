@@ -536,10 +536,35 @@ def rank_all_authors():
     if request.method == 'GET':
         connection = sqlite3.connect('sota.db')
         cursor = connection.cursor()
-        authors_with_rank = cursor.execute("""SELECT author_name, author_surname, COUNT(*) FROM authors INNER JOIN paper_authors ON authors.author_id = paper_authors.author_id GROUP BY author_name, author_surname""").fetchall()
-        for author_with_rank in authors_with_rank:
-            print(author_with_rank)
-        connection.close()
+        D = {}
+        #authors_with_rank = cursor.execute("""SELECT author_name, author_surname, COUNT(*) FROM authors INNER JOIN paper_authors ON authors.author_id = paper_authors.author_id GROUP BY author_name, author_surname""").fetchall()
+        authors_with_rank = []
+        query_result_1 = cursor.execute("""SELECT topic_id, sota_result FROM topics""").fetchall()
+        for query_tuple_1 in query_result_1:
+            topic_id = query_tuple_1[0]
+            sota_result = query_tuple_1[1]
+            query_result_2 = cursor.execute("""SELECT paper_id FROM paper_topics WHERE topic_id=?""", (topic_id,)).fetchall()
+            for query_tuple_2 in query_result_2:
+                paper_id = query_tuple_2[0]
+
+                query_result_3 = cursor.execute("""SELECT paper_id FROM papers WHERE paper_id=? AND result=?""", (paper_id, sota_result)).fetchall()
+                for query_tuple_3 in query_result_3:
+                    paper_id_sota_achieved = query_tuple_3[0]
+                    query_result_4 = cursor.execute("""SELECT author_name, author_surname FROM authors INNER JOIN paper_authors ON authors.author_id=paper_authors.author_id WHERE paper_id=?""", (paper_id_sota_achieved, )).fetchall()
+                    for query_tuple_4 in query_result_4:
+                        if query_tuple_4 in D:
+                            D[query_tuple_4] += 1
+                        else:
+                            D[query_tuple_4] = 1
+
+        authors = cursor.execute("""SELECT author_name, author_surname FROM authors""").fetchall()
+        authors_with_rank = []
+        for author in authors:
+            if author in D:
+                authors_with_rank.append((D[author], author[0], author[1]))
+            else:
+                authors_with_rank.append((0, author[0], author[1]))
+        authors_with_rank.sort(reverse=True)
         return render_template("rank_all_authors.html", authors_with_rank=authors_with_rank)
     else:
         return abort(404)

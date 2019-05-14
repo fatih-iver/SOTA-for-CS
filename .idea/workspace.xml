@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ad2ff9f7-5c03-444e-9e38-16b16961da5f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sota.db" beforeDir="false" afterPath="$PROJECT_DIR$/sota.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/rank_all_authors.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/rank_all_authors.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,8 +31,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="366" selection-start-line="366" selection-end-line="366" />
+            <state relative-caret-position="232">
+              <caret line="566" column="43" selection-start-line="566" selection-start-column="43" selection-end-line="566" selection-end-column="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/rank_all_authors.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="41" column="38" selection-start-line="41" selection-start-column="38" selection-end-line="41" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -91,15 +101,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/update_paper_index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="23" column="79" selection-start-line="23" selection-start-column="79" selection-end-line="23" selection-end-column="79" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/view_all.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="408">
@@ -140,6 +141,7 @@
       <find>add_topic</find>
       <find>update_tit</find>
       <find>paper_add_to</find>
+      <find>rank</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -161,7 +163,6 @@
         <option value="$PROJECT_DIR$/templates/add_paper.html" />
         <option value="$PROJECT_DIR$/initialize_db.py" />
         <option value="$PROJECT_DIR$/templates/add_topic.html" />
-        <option value="$PROJECT_DIR$/templates/rank_all_authors.html" />
         <option value="$PROJECT_DIR$/templates/search.html" />
         <option value="$PROJECT_DIR$/templates/papers_by_topic.html" />
         <option value="$PROJECT_DIR$/templates/sota_by_topic.html" />
@@ -183,6 +184,7 @@
         <option value="$PROJECT_DIR$/templates/paper_add_topic.html" />
         <option value="$PROJECT_DIR$/templates/paper_update_topic.html" />
         <option value="$PROJECT_DIR$/templates/paper_delete_topic.html" />
+        <option value="$PROJECT_DIR$/templates/rank_all_authors.html" />
         <option value="$PROJECT_DIR$/app.py" />
       </list>
     </option>
@@ -289,18 +291,18 @@
       <workItem from="1557746606286" duration="12824000" />
       <workItem from="1557771332815" duration="3774000" />
       <workItem from="1557821711006" duration="10542000" />
-      <workItem from="1557868074577" duration="2671000" />
+      <workItem from="1557868074577" duration="4148000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="70322000" />
+    <option name="totallyTimeSpent" value="71799000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.29830235" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.29830235" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -314,7 +316,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32978722" />
+      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32978722" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -403,13 +405,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="11" column="23" lean-forward="true" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/rank_all_authors.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="25" selection-start-line="25" selection-end-line="29" />
         </state>
       </provider>
     </entry>
@@ -546,10 +541,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/rank_all_authors.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="41" column="38" selection-start-line="41" selection-start-column="38" selection-end-line="41" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="366" selection-start-line="366" selection-end-line="366" />
+        <state relative-caret-position="232">
+          <caret line="566" column="43" selection-start-line="566" selection-start-column="43" selection-end-line="566" selection-end-column="43" />
         </state>
       </provider>
     </entry>
