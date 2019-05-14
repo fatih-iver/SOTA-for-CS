@@ -214,20 +214,21 @@ def add_paper():
 @app.route('/update_paper', methods=['GET', 'POST'])
 def update_paper():
     if request.method == 'POST':
-        old_title = request.form["old_title"]
-        new_title = request.form["new_title"]
-        new_abstract = request.form["new_abstract"]
-        new_result = int(request.form["new_result"])
-
-        connection = sqlite3.connect('sota.db')
-        cursor = connection.cursor()
-        cursor.execute("""UPDATE papers SET title=?, abstract=?, result=? WHERE title=?""",(new_title, new_abstract, new_result, old_title))
-        connection.commit()
-        connection.close()
-        print_papers()
-        return redirect(url_for('index'))
+        option = request.form["option"]
+        if option == "update_title":
+            return redirect(url_for("update_title"))
+        elif option == "update_abstract":
+            return redirect(url_for("update_abstract"))
+        elif option == "update_sota_result":
+            return redirect(url_for("update_sota_result"))
+        elif option == "aud_authors":
+            return redirect(url_for("aud_authors"))
+        elif option == "aud_topics":
+            return redirect(url_for("aud_topics"))
+        else:
+            return abort(404)
     elif request.method == 'GET':
-        return render_template("update_paper.html")
+        return render_template("update_paper_index.html")
     else:
         return abort(404)
 

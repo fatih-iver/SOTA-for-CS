@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Paper</title>
+</head>
+<body>
+
+<form action="{{ url_for('index') }}" method="get">
+    Go Back to Index Page:
+    <input type="submit" value="Submit">
+</form>
+<br>
+<form action="{{ url_for('update_paper') }}" method="post">
+    Options: <br><br>
+    <input type="radio" name="option" value="update_title" checked> Update Title <br>
+    <input type="radio" name="option" value="update_abstract" > Update Abstract <br>
+    <input type="radio" name="option" value="update_sota_result" > Update SOTA Result <br>
+    <input type="radio" name="option" value="aud_authors" > Add/Update/Delete Authors <br>
+    <input type="radio" name="option" value="aud_topics" > Add/Update/Delete Topics <br>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+<br>
+
+</body>
+</html>
