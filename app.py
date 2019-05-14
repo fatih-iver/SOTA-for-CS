@@ -347,6 +347,47 @@ def paper_delete_author():
     else:
         return abort(404)
 
+@app.route('/paper_add_topic', methods=['GET', 'POST'])
+def paper_add_topic():
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        topic_name = request.form['new_topic_name'].strip()
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+
+        query_tuple = cursor.execute("""SELECT paper_id FROM papers WHERE title=?""", (title, )).fetchone()
+        if query_tuple:
+            paper_id = query_tuple[0]
+
+            query_tuple = cursor.execute("""SELECT topic_id FROM topics WHERE topic_name=?""",(topic_name,)).fetchone()
+            if not query_tuple:
+                cursor.execute("""INSERT INTO topics (topic_name, sota_result) VALUES(?, ?)""", (topic_name, -1))
+                connection.commit()
+            topic_id = cursor.execute("""SELECT topic_id FROM topics WHERE topic_name=?""",(topic_name,)).fetchone()[0]
+
+            query_tuple = cursor.execute("""SELECT * FROM paper_topics WHERE paper_id=? AND topic_id=?""",(paper_id, topic_id)).fetchone()
+
+            if not query_tuple:
+                cursor.execute("""INSERT INTO paper_topics (paper_id, topic_id) VALUES(?, ?)""", (paper_id, topic_id))
+                connection.commit()
+
+            max_result = -1
+            max_tuple = cursor.execute(
+                """SELECT MAX(result) FROM papers INNER JOIN paper_topics ON papers.paper_id=paper_topics.paper_id WHERE topic_id=?""",
+                (topic_id,)).fetchone()
+            if max_tuple:
+                max_result = max_tuple[0]
+            cursor.execute("""UPDATE topics SET sota_result=? WHERE topic_id=?""", (max_result, topic_id))
+            connection.commit()
+
+        connection.close()
+        return redirect(url_for('update_paper'))
+    elif request.method == 'GET':
+        return render_template('paper_add_topic.html')
+    else:
+        return abort(404)
+
+
 @app.route('/update_paper', methods=['GET', 'POST'])
 def update_paper():
     if request.method == 'POST':
