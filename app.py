@@ -70,9 +70,12 @@ def delete_author():
         author_surname = request.form["author_surname"]
         connection = sqlite3.connect('sota.db')
         cursor = connection.cursor()
-        cursor.execute(
-            """DELETE FROM authors WHERE author_name=? AND author_surname=?""", (author_name, author_surname))
-        connection.commit()
+        query_result = cursor.execute("""SELECT author_id FROM authors WHERE author_name=? AND author_surname=?""", (author_name, author_surname)).fetchone()
+        if query_result:
+            author_id = query_result[0]
+            cursor.execute("""DELETE FROM authors WHERE author_id=?""", (author_id,))
+            cursor.execute("""DELETE FROM paper_authors WHERE author_id=?""", (author_id, ))
+            connection.commit()
         connection.close()
         print_authors()
         return redirect(url_for('index'))
