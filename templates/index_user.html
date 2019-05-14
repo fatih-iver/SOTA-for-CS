@@ -5,6 +5,11 @@
     <title>Index User</title>
 </head>
 <body>
+<form action="{{ url_for('welcome') }}" method="get">
+    Go Back to Welcome Page:
+    <input type="submit" value="Submit">
+</form>
+<br>
 <form action="{{ url_for('index') }}" method="post">
     Options: <br>
     <input type="radio" name="option" value="view_all" checked> View all authors, topics or papers <br>
