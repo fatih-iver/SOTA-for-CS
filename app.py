@@ -322,6 +322,31 @@ def paper_update_author():
     else:
         return abort(404)
 
+@app.route('/paper_delete_author', methods=['GET', 'POST'])
+def paper_delete_author():
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        author_name = request.form['author_name'].strip()
+        author_surname = request.form['author_surname'].strip()
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+
+        query_tuple = cursor.execute("""SELECT paper_id FROM papers WHERE title=?""", (title, )).fetchone()
+        if query_tuple:
+            paper_id = query_tuple[0]
+
+            query_tuple = cursor.execute("""SELECT author_id FROM authors WHERE author_name=? AND author_surname=?""",(author_name, author_surname)).fetchone()
+            if query_tuple:
+                author_id = query_tuple[0]
+                cursor.execute("""DELETE FROM paper_authors WHERE paper_id=? AND author_id=?""", (paper_id, author_id))
+                connection.commit()
+        connection.close()
+        return redirect(url_for('update_paper'))
+    elif request.method == 'GET':
+        return render_template('paper_delete_author.html')
+    else:
+        return abort(404)
+
 @app.route('/update_paper', methods=['GET', 'POST'])
 def update_paper():
     if request.method == 'POST':
