@@ -117,14 +117,10 @@ def add_topic():
 def update_topic():
     if request.method == 'POST':
         old_topic_name = request.form["old_topic_name"]
-        old_sota_result = int(request.form["old_sota_result"])
         new_topic_name = request.form["new_topic_name"]
-        new_sota_result = int(request.form["new_sota_result"])
         connection = sqlite3.connect('sota.db')
         cursor = connection.cursor()
-        cursor.execute(
-            """UPDATE topics SET topic_name=?, sota_result=? WHERE topic_name=? OR sota_result=?""",
-            (new_topic_name, new_sota_result, old_topic_name, old_sota_result))
+        cursor.execute("""UPDATE topics SET topic_name=? WHERE topic_name=?""", (new_topic_name, old_topic_name))
         connection.commit()
         connection.close()
         print_topics()
@@ -139,12 +135,14 @@ def update_topic():
 def delete_topic():
     if request.method == 'POST':
         topic_name = request.form["topic_name"]
-        sota_result = int(request.form["sota_result"])
         connection = sqlite3.connect('sota.db')
         cursor = connection.cursor()
-        cursor.execute(
-            """DELETE FROM topics WHERE topic_name=? OR sota_result=?""", (topic_name, sota_result))
-        connection.commit()
+        query_result = cursor.execute("""SELECT topic_id FROM topics WHERE topic_name=?""", (topic_name,)).fetchone()
+        if query_result:
+            topic_id = query_result[0]
+            cursor.execute("""DELETE FROM topics WHERE topic_id=?""", (topic_id,))
+            cursor.execute("""DELETE FROM paper_topics WHERE topic_id=?""", (topic_id,))
+            connection.commit()
         connection.close()
         print_topics()
         return redirect(url_for('index'))
