@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Topic of a Paper</title>
+</head>
+<body>
+
+<form action="{{ url_for('update_paper') }}" method="get">
+    Go Back to Update Paper Page:
+    <input type="submit" value="Submit">
+</form>
+<br>
+<form action="{{ url_for('paper_update_topic') }}" method="post">
+
+    Old Topic Name:<br>
+    <input type="text" name="old_topic_name">
+    <br>
+    New Topic Name:<br>
+    <input type="text" name="new_topic_name">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>

@@ -387,6 +387,21 @@ def paper_add_topic():
     else:
         return abort(404)
 
+@app.route('/paper_update_topic', methods=['GET', 'POST'])
+def paper_update_topic():
+    if request.method == 'POST':
+        old_topic_name = request.form['old_topic_name'].strip()
+        new_topic_name = request.form['new_topic_name'].strip()
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute("""UPDATE topics SET topic_name=? WHERE topic_name=?""", (new_topic_name, old_topic_name))
+        connection.commit()
+        connection.close()
+        return redirect(url_for('update_paper'))
+    elif request.method == 'GET':
+        return render_template('paper_update_topic.html')
+    else:
+        return abort(404)
 
 @app.route('/update_paper', methods=['GET', 'POST'])
 def update_paper():
