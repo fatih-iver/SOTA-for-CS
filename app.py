@@ -304,6 +304,24 @@ def paper_add_author():
     else:
         return abort(404)
 
+@app.route('/paper_update_author', methods=['GET', 'POST'])
+def paper_update_author():
+    if request.method == 'POST':
+        old_author_name = request.form['old_author_name'].strip()
+        old_author_surname = request.form['old_author_surname'].strip()
+        new_author_name = request.form['new_author_name'].strip()
+        new_author_surname = request.form['new_author_surname'].strip()
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute("""UPDATE authors SET author_name=?, author_surname=? WHERE author_name=? AND author_surname=?""", (new_author_name, new_author_surname, old_author_name, old_author_surname))
+        connection.commit()
+        connection.close()
+        return redirect(url_for('update_paper'))
+    elif request.method == 'GET':
+        return render_template('paper_update_author.html')
+    else:
+        return abort(404)
+
 @app.route('/update_paper', methods=['GET', 'POST'])
 def update_paper():
     if request.method == 'POST':
