@@ -228,6 +228,21 @@ def update_title():
     else:
         return abort(404)
 
+@app.route('/update_abstract', methods=['GET', 'POST'])
+def update_abstract():
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        abstract = request.form['abstract'].strip()
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute("""UPDATE papers SET abstract=? WHERE title=?""", (abstract, title))
+        connection.commit()
+        connection.close()
+        return redirect(url_for('update_paper'))
+    elif request.method == 'GET':
+        return render_template('update_abstract.html')
+    else:
+        return abort(404)
 
 @app.route('/update_paper', methods=['GET', 'POST'])
 def update_paper():
