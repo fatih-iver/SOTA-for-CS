@@ -244,6 +244,34 @@ def update_abstract():
     else:
         return abort(404)
 
+@app.route('/update_sota_result', methods=['GET', 'POST'])
+def update_sota_result():
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        new_result = int(request.form['new_result'].strip())
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+        cursor.execute("""UPDATE papers SET result=? WHERE title=?""", (new_result, title))
+        connection.commit()
+        query_result = cursor.execute("""SELECT paper_id FROM papers WHERE title=?""", (title,)).fetchone()
+        if query_result:
+            paper_id = query_result[0]
+            query_result = cursor.execute("""SELECT topic_id FROM paper_topics WHERE paper_id=?""", (paper_id, )).fetchall()
+            for query_tuple in query_result:
+                topic_id = query_tuple[0]
+                max_result = -1
+                max_tuple = cursor.execute("""SELECT MAX(result) FROM papers INNER JOIN paper_topics ON papers.paper_id=paper_topics.paper_id WHERE topic_id=?""", (topic_id,)).fetchone()
+                if max_tuple:
+                    max_result = max_tuple[0]
+                cursor.execute("""UPDATE topics SET sota_result=? WHERE topic_id=?""", (max_result, topic_id))
+                connection.commit()
+        connection.close()
+        return redirect(url_for('update_paper'))
+    elif request.method == 'GET':
+        return render_template('update_sota_result.html')
+    else:
+        return abort(404)
+
 @app.route('/update_paper', methods=['GET', 'POST'])
 def update_paper():
     if request.method == 'POST':

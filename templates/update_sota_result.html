@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update SOTA Result</title>
+</head>
+<body>
+
+<form action="{{ url_for('update_paper') }}" method="get">
+    Go Back to Update Paper Page:
+    <input type="submit" value="Submit">
+</form>
+<br>
+<form action="{{ url_for('update_sota_result') }}" method="post">
+    Title:<br>
+    <input type="text" name="title">
+    <br>
+    New SOTA Result:<br>
+    <input type="text" name="new_result">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>
