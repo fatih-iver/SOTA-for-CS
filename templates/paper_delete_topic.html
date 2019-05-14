@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete a Topic from a Paper</title>
+</head>
+<body>
+
+<form action="{{ url_for('update_paper') }}" method="get">
+    Go Back to Update Paper Page:
+    <input type="submit" value="Submit">
+</form>
+<br>
+<form action="{{ url_for('paper_delete_topic') }}" method="post">
+    Title:<br>
+    <input type="text" name="title">
+    <br><br>
+    Topic Name:<br>
+    <input type="text" name="topic_name">
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+</body>
+</html>
