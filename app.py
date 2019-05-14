@@ -238,8 +238,22 @@ def delete_paper():
         title = request.form["title"]
         connection = sqlite3.connect('sota.db')
         cursor = connection.cursor()
-        cursor.execute("""DELETE FROM papers WHERE title=?""", (title,))
-        connection.commit()
+        query_result = cursor.execute("""SELECT paper_id FROM papers WHERE title=?""", (title,)).fetchone()
+        if query_result:
+            paper_id = query_result[0]
+            cursor.execute("""DELETE FROM papers WHERE paper_id=?""", (paper_id,))
+            query_result = cursor.execute("""SELECT topic_id FROM paper_topics WHERE paper_id=?""", (paper_id,)).fetchall()
+            cursor.execute("""DELETE FROM paper_topics WHERE paper_id=?""", (paper_id,))
+            connection.commit()
+            for query_tuple in query_result:
+                topic_id = query_tuple[0]
+                max_result = -1
+                max_tuple = cursor.execute("""SELECT MAX(result) FROM papers INNER JOIN paper_topics ON papers.paper_id=paper_topics.paper_id WHERE topic_id=?""", (topic_id,)).fetchone()
+                if max_tuple:
+                    max_result = max_tuple[0]
+                cursor.execute("""UPDATE topics SET sota_result=? WHERE topic_id=?""", (max_result, topic_id))
+                connection.commit()
+
         connection.close()
         print_papers()
         return redirect(url_for('index'))
