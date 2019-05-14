@@ -272,6 +272,38 @@ def update_sota_result():
     else:
         return abort(404)
 
+@app.route('/paper_add_author', methods=['GET', 'POST'])
+def paper_add_author():
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        new_author_name = request.form['new_author_name'].strip()
+        new_author_surname = request.form['new_author_surname'].strip()
+        connection = sqlite3.connect('sota.db')
+        cursor = connection.cursor()
+
+        query_tuple = cursor.execute("""SELECT paper_id FROM papers WHERE title=?""", (title, )).fetchone()
+        if query_tuple:
+            paper_id = query_tuple[0]
+
+            query_tuple = cursor.execute("""SELECT author_id FROM authors WHERE author_name=? AND author_surname=?""",(new_author_name, new_author_surname)).fetchone()
+            if not query_tuple:
+                cursor.execute("""INSERT INTO authors (author_name, author_surname) VALUES(?, ?)""", (new_author_name, new_author_surname))
+                connection.commit()
+            author_id = cursor.execute("""SELECT author_id FROM authors WHERE author_name=? AND author_surname=?""",(new_author_name, new_author_surname)).fetchone()[0]
+
+            query_tuple = cursor.execute("""SELECT * FROM paper_authors WHERE paper_id=? AND author_id=?""",(paper_id, author_id)).fetchone()
+
+            if not query_tuple:
+                cursor.execute("""INSERT INTO paper_authors (paper_id, author_id) VALUES(?, ?)""", (paper_id, author_id))
+                connection.commit()
+
+        connection.close()
+        return redirect(url_for('update_paper'))
+    elif request.method == 'GET':
+        return render_template('paper_add_author.html')
+    else:
+        return abort(404)
+
 @app.route('/update_paper', methods=['GET', 'POST'])
 def update_paper():
     if request.method == 'POST':
@@ -282,10 +314,18 @@ def update_paper():
             return redirect(url_for("update_abstract"))
         elif option == "update_sota_result":
             return redirect(url_for("update_sota_result"))
-        elif option == "aud_authors":
-            return redirect(url_for("aud_authors"))
-        elif option == "aud_topics":
-            return redirect(url_for("aud_topics"))
+        elif option == "paper_add_author":
+            return redirect(url_for("paper_add_author"))
+        elif option == "paper_update_author":
+            return redirect(url_for("paper_update_author"))
+        elif option == "paper_delete_author":
+            return redirect(url_for("paper_delete_author"))
+        elif option == "paper_add_topic":
+            return redirect(url_for("paper_add_topic"))
+        elif option == "paper_update_topic":
+            return redirect(url_for("paper_update_topic"))
+        elif option == "paper_delete_topic":
+            return redirect(url_for("paper_delete_topic"))
         else:
             return abort(404)
     elif request.method == 'GET':
